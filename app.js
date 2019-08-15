@@ -24,4 +24,4 @@ app.get('/api/v1/crystals/:id', (req, res) => {
 })
 
 
-app.listen(PORT, () => console.log(`Example app running!`))
+app.listen(PORT, () => console.log(`Little shop of crystals running!`))
