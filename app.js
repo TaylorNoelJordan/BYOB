@@ -1,8 +1,11 @@
 const express = require('express');
+// const environment = process.env.NODE_ENV || 'development';
+// const configuration = require('./knexfile'[environment]);
 const morgan = require('morgan');
 const dbConnection = require('./connection');
 const app = express();
 const PORT = process.env.PORT || 3000;
+app.use(express.json())
 
 app.use(morgan(process.env.NODE_ENV !== 'production' ? 'dev' : 'combined'));
 
@@ -56,8 +59,8 @@ app.get('/api/v1/countries/:id', (req, res) => {
 
 app.get('/api/v1/countries/:id/cities', (req, res) => {
     dbConnection('cities')
-    .where('country_id', req.params.id)
-    .select()
+    .where({ country_id: req.params.id })
+    .select('*')
     .then(cities => {
         if(cities.length) {
             res.status(200).json(cities);
@@ -72,8 +75,8 @@ app.get('/api/v1/countries/:id/cities', (req, res) => {
 
 app.get('/api/v1/countries/:id/cities/:country_id', (req, res) => {
     dbConnection('cities')
-    .where('country_id', req.params.id)
-    .andWhere('id', req.params.country_id)
+    .where({ country_id: req.params.id })
+    .andWhere({ id: req.params.country_id})
     .select()
     .then(cities => {
         if(cities.length) {
@@ -86,5 +89,14 @@ app.get('/api/v1/countries/:id/cities/:country_id', (req, res) => {
         res.status(500).json({error: error.message, stack: error.stack})
     });
 });
+
+app.post('api/v1/countries/', (req, res) => {
+    dbConnection('countries')
+    .select()
+    .then()
+
+})
+
+app.post('/api/v1/countries/:id/cities')
 
 app.listen(PORT, () => console.log(`Places I've been app is running!`))
