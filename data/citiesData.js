@@ -384,3 +384,5 @@ let cities = [
         country_name: 'Sri Lanka'
     }
 ]
+
+module.exports = cities;

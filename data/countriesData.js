@@ -160,3 +160,5 @@ let countries = [
         capital: 'Sri Jayawardenepura Kotte'
     }
 ]
+
+module.exports = countries;
