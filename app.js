@@ -72,8 +72,8 @@ app.get('/api/v1/countries/:id/cities', (req, res) => {
 
 app.get('/api/v1/countries/:id/cities/:country_id', (req, res) => {
     dbConnection('cities')
-    .where('country_id', req.params.id)
-    .andWhere('id', req.params.country_id)
+    .where({ country_id: req.params.id })
+    .andWhere({ id: req.params.country_id })
     .select()
     .then(cities => {
         if(cities.length) {
@@ -86,5 +86,55 @@ app.get('/api/v1/countries/:id/cities/:country_id', (req, res) => {
         res.status(500).json({error: error.message, stack: error.stack})
     });
 });
+
+app.post('/api/v1/countries', (req, res) => {
+        const newCountry = req.body;
+        for (let reqField of [
+            'name',
+            'population',
+            'capital'
+        ]) {
+            if (!newCountry[reqField]) {
+                return res.status(422).send({
+                    error: `Check post request format: { name: <String>, population: <Integer>, capital: <String> }. Fill in ${reqField} fields.`
+                });
+            }
+        }
+        dbConnection('countries')
+        .insert(newCountry, 'id')
+        .then(country => {
+            res.status(201).json({ id: country[0] });
+        })
+        .catch(error => {
+            res.status(500).json({error: error.message, stack: error.stack})
+        })
+});
+
+app.post('/api/v1/countries/:id/cities', (res, req) => {
+    const newCity = req.body;
+    for (let reqField of [
+        'name',
+        'population',
+        'elevation',
+        'country_name'
+    ]) {
+        if(!newCity[reqField]) {
+            return res.status(422).send({
+                error: `Check post request format: { name: <String>, population: <Integer>, elevation: <Integer>, country_name: <String> }. Fill in ${reqField}`
+            });
+        }
+    }
+    dbConnection('cities')
+    .insert(newCity, 'id')
+    .then(city => {
+        res.status(201).json({ id: city[0] });
+    })
+    .catch(error => {
+        res.status(500).json({error: error.message, stack: error.stack})
+
+    })
+});
+
+
 
 app.listen(PORT, () => console.log(`Places I've been app is running!`))
