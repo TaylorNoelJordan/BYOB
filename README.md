@@ -20,7 +20,7 @@ Open localhost://3000/api/v1/countries
 ### Endpoints
 
 | url           |     method    | options  | Sample Response |
-| ------------- |:-------------:|    -----:|                  |
+| ------------- |-------------|    -----|      ---         |
 | `/api/v1/countries/`  | GET | none needed | `[{ name: 'Italy', population: 60483973, capital: 'Rome' }, { name: 'Spain', population: 46934632, capital: 'Madrid' }] |
 | `/api/v1/cities/  |   GET    | none needed | `[{ name: 'Rome', population: 4355725, elevation: 69, country_name: 'Italy' }, { name: 'Florence', population: 380948, elevation: 160, country_name: 'Italy' }]` |
 | `/api/v1/countries/:id` |   GET   |  none needed | ` name: 'Italy', population: 60483973, capital: 'Rome' }`|
