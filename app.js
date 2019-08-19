@@ -1,14 +1,15 @@
-const express = require('express');
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
-// const morgan = require('morgan');
-// const dbConnection = require('./connection');
-const app = express();
 const PORT = process.env.PORT || 3000;
-app.use(express.json())
+const express = require('express');
+const app = express();
+app.use(express.json());
 
-// app.use(morgan(process.env.NODE_ENV !== 'production' ? 'dev' : 'combined'));
+
+app.get('/', (req, res) => {
+    res.send('Welcome to Passport Me!')
+});
 
 app.get('/api/v1/countries', (req, res) => {
     database('countries')
