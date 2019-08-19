@@ -1,7 +1,6 @@
 {
   "name": "BYOB",
   "version": "1.0.0",
-  "description": "",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
@@ -16,5 +15,14 @@
     "knex": "^0.19.1",
     "morgan": "^1.9.1",
     "pg": "^7.12.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TaylorNoelJordan/BYOB.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TaylorNoelJordan/BYOB/issues"
+  },
+  "homepage": "https://github.com/TaylorNoelJordan/BYOB#readme",
+  "description": ""
 }
