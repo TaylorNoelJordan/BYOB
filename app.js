@@ -1,8 +1,10 @@
 const express = require('express');
+// const environmet = process.env.NODE_ENV || 'development'
 const morgan = require('morgan');
 const dbConnection = require('./connection');
 const app = express();
 const PORT = process.env.PORT || 3000;
+app.use(express.json())
 
 app.use(morgan(process.env.NODE_ENV !== 'production' ? 'dev' : 'combined'));
 
@@ -131,10 +133,27 @@ app.post('/api/v1/countries/:id/cities', (res, req) => {
     })
     .catch(error => {
         res.status(500).json({error: error.message, stack: error.stack})
-
     })
 });
 
+app.delete('/api/v1/countries/:id/', (req, res) => {
+    const { id } = req.params;
+    const removeCountry = [
+        dbConnection('countries')
+        .where({ id: id })
+        .del()
+    ];
+    Promise.all(deleteCountry)
+    .then(() => {
+        res.json({
+            success: `Country with id ${id} has been removed from your passport.`
+        });
+    })
+    .catch(error => {
+        res.status(500).json({error: error.message, stack: error.stack})        
+    })
+})
 
 
-app.listen(PORT, () => console.log(`Places I've been app is running!`))
+
+app.listen(PORT, () => console.log(`Your passport is succesfully running on http://localhost:${PORT}`))
