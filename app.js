@@ -1,15 +1,17 @@
 const express = require('express');
-// const environmet = process.env.NODE_ENV || 'development'
-const morgan = require('morgan');
-const dbConnection = require('./connection');
+const environment = process.env.NODE_ENV || 'development';
+const configuration = require('./knexfile')[environment];
+const database = require('knex')(configuration);
+// const morgan = require('morgan');
+// const dbConnection = require('./connection');
 const app = express();
 const PORT = process.env.PORT || 3000;
 app.use(express.json())
 
-app.use(morgan(process.env.NODE_ENV !== 'production' ? 'dev' : 'combined'));
+// app.use(morgan(process.env.NODE_ENV !== 'production' ? 'dev' : 'combined'));
 
 app.get('/api/v1/countries', (req, res) => {
-    dbConnection('countries')
+    database('countries')
         .select('*')
         .then(countries => {
             if(countries) {
@@ -24,7 +26,7 @@ app.get('/api/v1/countries', (req, res) => {
 });
 
 app.get('/api/v1/cities', (req, res) => {
-    dbConnection('cities')
+    database('cities')
     .select('*')
     .then(cities => {
         if(cities) {
@@ -39,7 +41,7 @@ app.get('/api/v1/cities', (req, res) => {
 })
 
 app.get('/api/v1/countries/:id', (req, res) => {
-    dbConnection('countries')
+    database('countries')
         .select('*')
         .limit(1)
         .where({ id: req.params.id })
@@ -57,7 +59,7 @@ app.get('/api/v1/countries/:id', (req, res) => {
 });
 
 app.get('/api/v1/countries/:id/cities', (req, res) => {
-    dbConnection('cities')
+    database('cities')
     .where('country_id', req.params.id)
     .select()
     .then(cities => {
@@ -73,7 +75,7 @@ app.get('/api/v1/countries/:id/cities', (req, res) => {
 })
 
 app.get('/api/v1/countries/:id/cities/:country_id', (req, res) => {
-    dbConnection('cities')
+    database('cities')
     .where({ country_id: req.params.id })
     .andWhere({ id: req.params.country_id })
     .select()
@@ -102,7 +104,7 @@ app.post('/api/v1/countries', (req, res) => {
                 });
             }
         }
-        dbConnection('countries')
+        database('countries')
         .insert(newCountry, 'id')
         .then(country => {
             res.status(201).json({ id: country[0] });
@@ -126,7 +128,7 @@ app.post('/api/v1/countries/:id/cities', (res, req) => {
             });
         }
     }
-    dbConnection('cities')
+    database('cities')
     .insert(newCity, 'id')
     .then(city => {
         res.status(201).json({ id: city[0] });
@@ -139,11 +141,11 @@ app.post('/api/v1/countries/:id/cities', (res, req) => {
 app.delete('/api/v1/countries/:id/', (req, res) => {
     const { id } = req.params;
     const removeCountry = [
-        dbConnection('countries')
+        database('countries')
         .where({ id: id })
         .del()
     ];
-    Promise.all(deleteCountry)
+    Promise.all(removeCountry)
     .then(() => {
         res.json({
             success: `Country with id ${id} has been removed from your passport.`
