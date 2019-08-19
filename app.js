@@ -1,4 +1,5 @@
 const express = require('express');
+// const configuration = require('./knexfile'[environment]);
 // const environmet = process.env.NODE_ENV || 'development'
 const morgan = require('morgan');
 const dbConnection = require('./connection');
@@ -58,8 +59,8 @@ app.get('/api/v1/countries/:id', (req, res) => {
 
 app.get('/api/v1/countries/:id/cities', (req, res) => {
     dbConnection('cities')
-    .where('country_id', req.params.id)
-    .select()
+    .where({ country_id: req.params.id })
+    .select('*')
     .then(cities => {
         if(cities.length) {
             res.status(200).json(cities);
