@@ -61,7 +61,7 @@ app.get('/api/v1/countries/:id', (req, res) => {
 
 app.get('/api/v1/countries/:id/cities', (req, res) => {
     database('cities')
-    .where('country_id', req.params.id)
+    .where({ country_id: req.params.id })
     .select()
     .then(cities => {
         if(cities.length) {
@@ -148,7 +148,7 @@ app.delete('/api/v1/countries/:id/', (req, res) => {
     ];
     Promise.all(removeCountry)
     .then(() => {
-        res.json({
+        res.status(202).json({
             success: `Country with id ${id} has been removed from your passport.`
         });
     })
